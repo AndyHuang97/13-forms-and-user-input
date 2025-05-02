@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 export default function Signup() {
+  const [passwordAreNotEqual, setPasswordAreNotEqual] = useState(false);
+
   function handleSubmit(event) {
     event.preventDefault(); // prevent default browser behavior of sending http request
 
@@ -9,6 +13,11 @@ export default function Signup() {
     const data = Object.fromEntries(fd.entries());
     data.acquisition = acquisitionChannel;
     console.log(data);
+
+    if (data.password !== data["confirm-password"]) {
+      setPasswordAreNotEqual(true);
+      return;
+    }
 
     // re set the form, same thing the button of type reset does
     event.target.reset();
@@ -45,6 +54,9 @@ export default function Signup() {
             name='confirm-password'
             required
           />
+          <div className='control-error'>
+            {passwordAreNotEqual && <p>Passwords must match.</p>}
+          </div>
         </div>
       </div>
 
