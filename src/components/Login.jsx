@@ -51,7 +51,9 @@ export default function Login() {
         http request to the react server and refresh the page
         One way to solve this problem is adding type="button".
         Another more elegant way is to use onSubmit on the form*/}
-        <button className='button button-flat'>Reset</button>
+        <button type='reset' className='button button-flat'>
+          Reset
+        </button>
         <button className='button' /*onClick={handleSubmit}*/>Login</button>
       </p>
     </form>
