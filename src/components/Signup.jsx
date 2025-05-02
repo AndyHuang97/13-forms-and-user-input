@@ -71,7 +71,19 @@ export default function Signup() {
     }
 
     if (errors.length > 0) {
-      return { errors };
+      return {
+        errors,
+        enteredValues: {
+          email: data["email"],
+          password: data["password"],
+          confirmPassword: data["confirm-password"],
+          firstName: data["first-name"],
+          lastName: data["last-name"],
+          role: data["role"],
+          acquisitionChannel: data["acquisition"],
+          terms: data["terms"],
+        },
+      };
     }
 
     return { errors: null };
@@ -97,7 +109,13 @@ export default function Signup() {
       <div className='control'>
         <label htmlFor='email'>Email</label>
         {/* setting required for email type will activate validation */}
-        <input id='email' type='email' name='email' required />
+        <input
+          id='email'
+          type='email'
+          name='email'
+          required
+          defaultValue={formState.enteredValues?.email}
+        />
       </div>
 
       <div className='control-row'>
@@ -109,6 +127,7 @@ export default function Signup() {
             name='password'
             required
             minLength={6}
+            defaultValue={formState.enteredValues?.password}
           />
         </div>
 
@@ -119,6 +138,7 @@ export default function Signup() {
             type='password'
             name='confirm-password'
             required
+            defaultValue={formState.enteredValues?.confirmPassword}
           />
           <div className='control-error'>
             {passwordAreNotEqual && <p>Passwords must match.</p>}
@@ -131,18 +151,36 @@ export default function Signup() {
       <div className='control-row'>
         <div className='control'>
           <label htmlFor='first-name'>First Name</label>
-          <input type='text' id='first-name' name='first-name' required />
+          <input
+            type='text'
+            id='first-name'
+            name='first-name'
+            required
+            defaultValue={formState.enteredValues?.firstName}
+          />
         </div>
 
         <div className='control'>
           <label htmlFor='last-name'>Last Name</label>
-          <input type='text' id='last-name' name='last-name' required />
+          <input
+            type='text'
+            id='last-name'
+            name='last-name'
+            required
+            defaultValue={formState.enteredValues?.lastName}
+          />
         </div>
       </div>
 
       <div className='control'>
         <label htmlFor='phone'>What best describes your role?</label>
-        <select id='role' name='role' required>
+        {/* BUG: for selection field, the reset will always choose the first element */}
+        <select
+          id='role'
+          name='role'
+          required
+          defaultValue={formState.enteredValues?.role}
+        >
           <option value='student'>Student</option>
           <option value='teacher'>Teacher</option>
           <option value='employee'>Employee</option>
@@ -159,6 +197,9 @@ export default function Signup() {
             id='google'
             name='acquisition'
             value='google'
+            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+              "google"
+            )}
           />
           <label htmlFor='google'>Google</label>
         </div>
@@ -169,20 +210,36 @@ export default function Signup() {
             id='friend'
             name='acquisition'
             value='friend'
+            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+              "friend"
+            )}
           />
           <label htmlFor='friend'>Referred by friend</label>
         </div>
 
         <div className='control'>
-          <input type='checkbox' id='other' name='acquisition' value='other' />
+          <input
+            type='checkbox'
+            id='other'
+            name='acquisition'
+            value='other'
+            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+              "other"
+            )}
+          />
           <label htmlFor='other'>Other</label>
         </div>
       </fieldset>
 
       <div className='control'>
         <label htmlFor='terms-and-conditions'>
-          <input type='checkbox' id='terms-and-conditions' name='terms' />I
-          agree to the terms and conditions
+          <input
+            type='checkbox'
+            id='terms-and-conditions'
+            name='terms'
+            defaultChecked={formState.enteredValues?.terms}
+          />
+          I agree to the terms and conditions
         </label>
       </div>
 
