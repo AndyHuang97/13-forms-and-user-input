@@ -9,6 +9,9 @@ export default function Login() {
     password: "",
   });
 
+  const emailIsInvalid =
+    enteredValues.email !== "" && !enteredValues.email.includes("@");
+
   // event is given on submit
   function handleSubmit(event) {
     event.preventDefault(); // prevent default browser behavior of sending http request
@@ -49,6 +52,9 @@ export default function Login() {
             onChange={(event) => handleInputChange("email", event)}
             value={enteredValues.email}
           />
+          <div className='control-error'>
+            {emailIsInvalid && <p>Please enter a valid email address.</p>}
+          </div>
         </div>
 
         <div className='control no-margin'>
@@ -70,7 +76,9 @@ export default function Login() {
         One way to solve this problem is adding type="button".
         Another more elegant way is to use onSubmit on the form*/}
         <button className='button button-flat'>Reset</button>
-        <button className='button' /*onClick={handleSubmit}*/>Login</button>
+        <button type='button' className='button' /*onClick={handleSubmit}*/>
+          Login
+        </button>
       </p>
     </form>
   );
