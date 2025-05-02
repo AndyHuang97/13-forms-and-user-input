@@ -1,5 +1,12 @@
 import { useState } from "react";
 
+import {
+  isEmail,
+  hasMinLength,
+  isNotEmpty,
+  isEqualsToOtherValue,
+} from "../util/validation.js";
+
 export default function Signup() {
   const [passwordAreNotEqual, setPasswordAreNotEqual] = useState(false);
 
@@ -25,8 +32,43 @@ export default function Signup() {
 
   // form action will pass formData to the action function
   function signupAction(formData) {
-    const enteredEmail = formData.get("email");
-    console.log(enteredEmail);
+    // to access the input fields with FormData, they need to have attribute name
+    const fd = new FormData(event.target);
+    // for multivalue fields like checkboxes, the name attribute should be the same
+    const acquisitionChannel = fd.getAll("acquisition");
+    const data = Object.fromEntries(fd.entries());
+    data.acquisition = acquisitionChannel;
+    console.log(data);
+
+    let errors = [];
+
+    if (!isEmail(data["email"])) {
+      errors.push("Email is not valid");
+    }
+
+    if (!isNotEmpty(data["password"]) || !hasMinLength(data["password"], 6)) {
+      errors.push("Password must be at least 6 characters long");
+    }
+
+    if (!isEqualsToOtherValue(data["password"], data["confirm-password"])) {
+      errors.push("Passwords must match");
+    }
+
+    if (!isNotEmpty(data["first-name"]) || !isNotEmpty(data["last-name"])) {
+      errors.push("First name and last name are required");
+    }
+
+    if (!isNotEmpty(data["role"])) {
+      errors.push("Role is required");
+    }
+
+    if (!data["terms"]) {
+      errors.push("You must accept the terms and conditions");
+    }
+
+    if (acquisitionChannel.length === 0) {
+      errors.push("You must select at least one acquisition channel");
+    }
   }
 
   return (
