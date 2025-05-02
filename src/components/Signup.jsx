@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useActionState } from "react";
 
 import {
   isEmail,
@@ -31,7 +31,7 @@ export default function Signup() {
   }
 
   // form action will pass formData to the action function
-  function signupAction(formData) {
+  function signupAction(prevFormState, formData) {
     // to access the input fields with FormData, they need to have attribute name
     const fd = new FormData(event.target);
     // for multivalue fields like checkboxes, the name attribute should be the same
@@ -69,14 +69,28 @@ export default function Signup() {
     if (acquisitionChannel.length === 0) {
       errors.push("You must select at least one acquisition channel");
     }
+
+    if (errors.length > 0) {
+      return { errors };
+    }
+
+    return { errors: null };
   }
+
+  // useActionState will return the action state, and a function to set the action state
+  // formState: the object returned by the action function
+  // formAction: a wrapper function that will call the action function and is able to listen to events
+  // pending: if the form has been submitted
+  const [formState, formAction, pending] = useActionState(signupAction, {
+    errors: null,
+  });
 
   return (
     // <form onSubmit={handleSubmit}>
     // form action will reset your form fields
     // normally, the action attribute is used to send the form data to a server
     // in HTML, the action attribute is a URL, in React, it can be a function
-    <form action={signupAction}>
+    <form action={formAction}>
       <h2>Welcome on board!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
@@ -171,6 +185,14 @@ export default function Signup() {
           agree to the terms and conditions
         </label>
       </div>
+
+      {formState.errors && (
+        <ul className='error'>
+          {formState.errors.map((error) => (
+            <li key={error}>{error}</li>
+          ))}
+        </ul>
+      )}
 
       <p className='form-actions'>
         {/* to reset the form, we can use type='reset' */}
