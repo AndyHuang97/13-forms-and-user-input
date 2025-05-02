@@ -23,8 +23,18 @@ export default function Signup() {
     event.target.reset();
   }
 
+  // form action will pass formData to the action function
+  function signupAction(formData) {
+    const enteredEmail = formData.get("email");
+    console.log(enteredEmail);
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    // <form onSubmit={handleSubmit}>
+    // form action will reset your form fields
+    // normally, the action attribute is used to send the form data to a server
+    // in HTML, the action attribute is a URL, in React, it can be a function
+    <form action={signupAction}>
       <h2>Welcome on board!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
