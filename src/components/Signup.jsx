@@ -7,6 +7,65 @@ import {
   isEqualsToOtherValue,
 } from "../util/validation.js";
 
+// form action will pass formData to the action function
+function signupAction(prevFormState, formData) {
+  // to access the input fields with FormData, they need to have attribute name
+  const fd = new FormData(event.target);
+  // for multivalue fields like checkboxes, the name attribute should be the same
+  const acquisitionChannel = fd.getAll("acquisition");
+  const data = Object.fromEntries(fd.entries());
+  data.acquisition = acquisitionChannel;
+  console.log(data);
+
+  let errors = [];
+
+  if (!isEmail(data["email"])) {
+    errors.push("Email is not valid");
+  }
+
+  if (!isNotEmpty(data["password"]) || !hasMinLength(data["password"], 6)) {
+    errors.push("Password must be at least 6 characters long");
+  }
+
+  if (!isEqualsToOtherValue(data["password"], data["confirm-password"])) {
+    errors.push("Passwords must match");
+  }
+
+  if (!isNotEmpty(data["first-name"]) || !isNotEmpty(data["last-name"])) {
+    errors.push("First name and last name are required");
+  }
+
+  if (!isNotEmpty(data["role"])) {
+    errors.push("Role is required");
+  }
+
+  if (!data["terms"]) {
+    errors.push("You must accept the terms and conditions");
+  }
+
+  if (acquisitionChannel.length === 0) {
+    errors.push("You must select at least one acquisition channel");
+  }
+
+  if (errors.length > 0) {
+    return {
+      errors,
+      enteredValues: {
+        email: data["email"],
+        password: data["password"],
+        confirmPassword: data["confirm-password"],
+        firstName: data["first-name"],
+        lastName: data["last-name"],
+        role: data["role"],
+        acquisitionChannel: data["acquisition"],
+        terms: data["terms"],
+      },
+    };
+  }
+
+  return { errors: null };
+}
+
 export default function Signup() {
   const [passwordAreNotEqual, setPasswordAreNotEqual] = useState(false);
 
@@ -28,65 +87,6 @@ export default function Signup() {
 
     // re set the form, same thing the button of type reset does
     event.target.reset();
-  }
-
-  // form action will pass formData to the action function
-  function signupAction(prevFormState, formData) {
-    // to access the input fields with FormData, they need to have attribute name
-    const fd = new FormData(event.target);
-    // for multivalue fields like checkboxes, the name attribute should be the same
-    const acquisitionChannel = fd.getAll("acquisition");
-    const data = Object.fromEntries(fd.entries());
-    data.acquisition = acquisitionChannel;
-    console.log(data);
-
-    let errors = [];
-
-    if (!isEmail(data["email"])) {
-      errors.push("Email is not valid");
-    }
-
-    if (!isNotEmpty(data["password"]) || !hasMinLength(data["password"], 6)) {
-      errors.push("Password must be at least 6 characters long");
-    }
-
-    if (!isEqualsToOtherValue(data["password"], data["confirm-password"])) {
-      errors.push("Passwords must match");
-    }
-
-    if (!isNotEmpty(data["first-name"]) || !isNotEmpty(data["last-name"])) {
-      errors.push("First name and last name are required");
-    }
-
-    if (!isNotEmpty(data["role"])) {
-      errors.push("Role is required");
-    }
-
-    if (!data["terms"]) {
-      errors.push("You must accept the terms and conditions");
-    }
-
-    if (acquisitionChannel.length === 0) {
-      errors.push("You must select at least one acquisition channel");
-    }
-
-    if (errors.length > 0) {
-      return {
-        errors,
-        enteredValues: {
-          email: data["email"],
-          password: data["password"],
-          confirmPassword: data["confirm-password"],
-          firstName: data["first-name"],
-          lastName: data["last-name"],
-          role: data["role"],
-          acquisitionChannel: data["acquisition"],
-          terms: data["terms"],
-        },
-      };
-    }
-
-    return { errors: null };
   }
 
   // useActionState will return the action state, and a function to set the action state
