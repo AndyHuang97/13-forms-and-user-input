@@ -10,11 +10,9 @@ import {
 // form action will pass formData to the action function
 function signupAction(prevFormState, formData) {
   // to access the input fields with FormData, they need to have attribute name
-  const fd = new FormData(event.target);
   // for multivalue fields like checkboxes, the name attribute should be the same
-  const acquisitionChannel = fd.getAll("acquisition");
-  const data = Object.fromEntries(fd.entries());
-  data.acquisition = acquisitionChannel;
+  const acquisitionChannel = formData.getAll("acquisition");
+  const data = Object.fromEntries(formData.entries());
   console.log(data);
 
   let errors = [];
@@ -197,7 +195,7 @@ export default function Signup() {
             id='google'
             name='acquisition'
             value='google'
-            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+            defaultChecked={formState.enteredValues?.acquisitionChannel?.includes(
               "google"
             )}
           />
@@ -210,7 +208,7 @@ export default function Signup() {
             id='friend'
             name='acquisition'
             value='friend'
-            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+            defaultChecked={formState.enteredValues?.acquisitionChannel?.includes(
               "friend"
             )}
           />
@@ -223,7 +221,7 @@ export default function Signup() {
             id='other'
             name='acquisition'
             value='other'
-            defaultChecked={formState.enteredValues?.acquisitionChannel.includes(
+            defaultChecked={formState.enteredValues?.acquisitionChannel?.includes(
               "other"
             )}
           />
