@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function Login() {
   // less code than useState, but imperative code for resetting the input fields
@@ -6,19 +6,25 @@ export default function Login() {
   const email = useRef();
   const password = useRef();
 
+  const [emailIsInvalid, setEmailIsInvalid] = useState(false);
+
   // event is given on submit
   function handleSubmit(event) {
     event.preventDefault(); // prevent default browser behavior of sending http request
 
     const enteredEmail = email.current.value;
     const enteredPassword = password.current.value;
-    console.log("Form submitted");
-    console.log(enteredEmail);
-    console.log(enteredPassword);
 
-    // reset the input fields, but bettere leave to react to do changes to the DOM
-    email.current.value = "";
-    password.current.value = "";
+    const emailIsValid = enteredEmail.includes("@");
+
+    if (!emailIsValid) {
+      setEmailIsInvalid(true);
+      return; // stop the function here
+    }
+
+    // reset the UI, remove the error message
+    setEmailIsInvalid(false);
+    console.log("Sending HTTP request");
   }
 
   return (
@@ -29,6 +35,9 @@ export default function Login() {
           {/* the htmlFor attribute is used to link the label to the input field */}
           <label htmlFor='email'>Email</label>
           <input id='email' type='email' name='email' ref={email} />
+          <div className='control-error'>
+            {emailIsInvalid && <p>Please enter a valid email address.</p>}
+          </div>
         </div>
 
         <div className='control no-margin'>
