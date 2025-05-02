@@ -15,6 +15,10 @@ export default function Login() {
     console.log("Form submitted");
     console.log(enteredEmail);
     console.log(enteredPassword);
+
+    // reset the input fields, but bettere leave to react to do changes to the DOM
+    email.current.value = "";
+    password.current.value = "";
   }
 
   return (

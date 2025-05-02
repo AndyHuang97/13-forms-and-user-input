@@ -14,6 +14,10 @@ export default function Login() {
     event.preventDefault(); // prevent default browser behavior of sending http request
     console.log("Form submitted");
     console.log(enteredValues);
+    setEnteredValues({
+      email: "",
+      password: "",
+    });
   }
 
   function handleInputChange(identifier, event) {
